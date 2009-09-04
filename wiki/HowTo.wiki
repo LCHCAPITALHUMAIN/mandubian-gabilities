@@ -1,0 +1,4 @@
+#summary How to use this project
+
+= How To =
+  * Checkout the project
