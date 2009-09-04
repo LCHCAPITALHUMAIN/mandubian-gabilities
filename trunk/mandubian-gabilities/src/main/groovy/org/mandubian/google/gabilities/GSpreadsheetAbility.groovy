@@ -173,7 +173,7 @@ public class GSpreadsheetAbility{
 	 * def (spreadsheet, res) = service.getSpreadsheetByKey("987SHSK88342")<br/>
 	 * </code>
 	 * @param self				the SpreadsheetService externally initialized and authenticated.
-	 * @param spreadsheetName	the spreadsheet name to create.
+	 * @param key				the spreadsheet key to get.
 	 * @return					a tuple among: 
 	 * 							<ul>
 	 * 								<li>(null, GApiStatus.NOT_FOUND)</li>
@@ -513,7 +513,7 @@ public class GSpreadsheetAbility{
 	 * def res = service.deleteSpreadsheet("test1", multiple: true)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to delete.
+	 * @param spreadsheetName the spreadsheet name to delete.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						multiple:true
@@ -552,8 +552,8 @@ public class GSpreadsheetAbility{
 	 * def res = service.deleteSpreadsheet("test1", "folder1", multiple: true)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to delete.
-	 * @param foldername	the folder name to look for.
+	 * @param spreadsheetName	the spreadsheet name to delete.
+	 * @param folderName	the folder name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						multiple:true
@@ -690,7 +690,7 @@ public class GSpreadsheetAbility{
 	 * def (res, nb_ms) = service.waitForSpreadsheetCreation("doc1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to look for.
+	 * @param docName		the document name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
@@ -778,7 +778,7 @@ public class GSpreadsheetAbility{
 	 * def (res, nb_ms) = service.waitForSpreadsheetDeletion("doc1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to look for.
+	 * @param docName		the document name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
@@ -1058,7 +1058,6 @@ public class GSpreadsheetAbility{
 	 * def (worksheet, res) = spreadsheet.getWorksheet("worksheet1", exact:false)<br/>
 	 * </code>
 	 * @param self				the SpreadsheetEntry externally initialized and authenticated.
-	 * @param spreadsheetName	the spreadsheet name containing the worksheet.
 	 * @param worksheetName		the worksheet name to get.
 	 * @param options			Specifies function options as a map.<br/>
 	 * 							For example:<br/>

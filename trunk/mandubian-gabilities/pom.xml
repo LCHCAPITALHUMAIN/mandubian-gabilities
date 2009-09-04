@@ -13,6 +13,7 @@
 	<name>Mandubian GoogleAPI Groovy abilities</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<url>www.mandubian.org</url>
+	<description>Some Groovy category classes providing some facilities for Google Data Client Apis</description>
 
 	<contributors>
 		<contributor>
@@ -147,7 +148,29 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.5</version>
+				<configuration>
+					<sourcepath>target/generated-sources/groovy-stubs/main</sourcepath>
+					<detectLinks>true</detectLinks>
+					<links>
+						<link>http://code.google.com/apis/gdata/javadoc/</link>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+						<!-- <link>http://www.dpml.net/api/ant/1.7.0</link>-->
+						<!-- <link>http://junit.sourceforge.net/junit3.8.1/javadoc/</link> -->
+						<link>http://groovy.codehaus.org/api/</link>
+					</links>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+							<!-- <report>test-javadoc</report> -->
+						</reports>
+					</reportSet>
+				</reportSets>
+		
 			</plugin>
+
+			
 		</plugins>
 	</reporting>
 
@@ -184,7 +207,21 @@
 					</execution>
 				</executions>
 			</plugin>	
-		-->				
+		-->		
+			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateStubs</goal>
+							<!-- <goal>generateTestStubs</goal> -->							
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+				
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -192,7 +229,13 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<outputDirectory>site</outputDirectory>
+				</configuration>
+			</plugin>
 			<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -237,11 +280,13 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-			
+            </plugin>     
 		</plugins>
 	</build>
- 
+	
+ <!-- no used because with gmaven plugin generating java stubs and java doc
+ the result is quite better than with groovy-docs -->
+ <!-- 
 	<profiles>
 		<profile>
 			<id>groovy-docs</id>
@@ -288,4 +333,5 @@
 			</build>
 		</profile>
 	</profiles>
+ -->	
 </project>
