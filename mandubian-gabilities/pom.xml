@@ -25,7 +25,7 @@
 	<repositories>
 		<repository>
 			<id>mandubian-mvn</id>
-			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repo/1.36.0</url>
+			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
 		</repository>
 	</repositories>
 
