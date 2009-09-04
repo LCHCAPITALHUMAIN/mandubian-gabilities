@@ -1,4 +1,5 @@
 #summary How to use this project
+#labels Phase-Deploy,Featured
 
 = How To =
 ===Install Eclipse + M2Eclipse & Subclipse & Groovy Eclipse plugin===
@@ -32,5 +33,6 @@ _The names will be the names of the documents/folders created by JUnit tests_
   * It should run 45 JUnit tests
  
 
-Play with it, criticize and give ideas to improve it
+Play with it, criticize and give ideas to improve it.
+
 That's all folks...
