@@ -566,7 +566,7 @@ public class GDocAbility{
 	 * def (res, nb_ms) = service.waitForFolderDeletion("folder1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param foldername	the folder name to look for.
+	 * @param folderName	the folder name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
@@ -619,7 +619,7 @@ public class GDocAbility{
 	 * def (res, nb_ms) = service.waitForFolderCreation("folder1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param foldername	the folder name to look for.
+	 * @param folderName	the folder name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
@@ -678,7 +678,7 @@ public class GDocAbility{
 	 * def (res, nb_ms) = service.waitForDocumentCreation("doc1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to look for.
+	 * @param docName		the document name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
@@ -736,8 +736,8 @@ public class GDocAbility{
 	 * def (res, nb_ms) = service.waitForDocumentCreation("doc1", "folder1", delay:2000)<br/>
 	 * </code>
 	 * @param self			the DocsService externally initialized and authenticated.
-	 * @param docname		the document name to look for.
-	 * @param foldername	the folder name to look for.
+	 * @param docName		the document name to look for.
+	 * @param folderName	the folder name to look for.
 	 * @param options		Specifies function options as a map.<br/>
 	 * 						For example:<br/>
 	 * 						maxcount: 15
