@@ -1,0 +1,8 @@
+#summary The Documentation page (mainly maven site + javadoc for the time being).
+#labels Featured,Phase-Implementation
+
+= Documentation =
+
+The documentation is a bit raw and I advise to have a look at the JUnit Tests code which might give some more practical samples.
+
+  * [javadoc]
