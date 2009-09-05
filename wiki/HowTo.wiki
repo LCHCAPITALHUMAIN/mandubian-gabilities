@@ -23,7 +23,7 @@ foldername = GDocAbilityTestFolder3
 folderdocname = GDocAbilityTestFolderDoc3
 }}}
 
-_The names will be the names of the documents/folders created by JUnit tests_
+_The given doc/folder/worsheet names are the names of the documents/folders created by JUnit tests_
  
  
  
@@ -32,6 +32,8 @@ _The names will be the names of the documents/folders created by JUnit tests_
   * It should compile
   * It should run 45 JUnit tests
  
+This is a draft with basic functions and it will evolve certainly so don't be surprise!
+Now you can go to the javadoc
 
 Play with it, criticize and give ideas to improve it.
 
