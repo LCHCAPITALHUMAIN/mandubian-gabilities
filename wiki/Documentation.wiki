@@ -5,4 +5,5 @@
 
 The documentation is a bit raw and I advise to have a look at the JUnit Tests code which might give some more practical samples.
 
-  * [javadoc]
+  * [http://mandubian-gabilities.googlecode.com/svn/trunk/mandubian-gabilities/site/index.html Maven generated site]
+  *
