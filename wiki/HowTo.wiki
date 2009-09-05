@@ -34,7 +34,7 @@ _The given doc/folder/worsheet names are the names of the documents/folders crea
  
 This is a draft with basic functions and it will evolve certainly so don't be surprise!
 
-Now you can go to the Documentation if you like
+Now you can go to the [Documentation] if you like
 
 Play with it, criticize and give ideas to improve it.
 
