@@ -59,7 +59,7 @@ class GDocSpreadsheetAbilitySingleTest extends GroovyTestCase {
 	}
 	
 
-
+/*
 	void testCreateSpreadsheetFile() {
         use(GDocAbility, GSpreadsheetAbility) {
         	def (spreadsheet,res) = 
@@ -72,7 +72,25 @@ class GDocSpreadsheetAbilitySingleTest extends GroovyTestCase {
         			+docService.waitForDocumentCreation(docName))
         }
     }	
-	
+*/	
+	void testAddWorksheet() {
+        use(GSpreadsheetAbility) {
+        	def(docSpreadsheet, res) = 
+    			docService.createSpreadsheet(docName, new File(csvfilepath))
+    			
+    		println("waitForDocumentCreation:"
+        			+docService.waitForSpreadsheetCreation(docName))
+        	
+    		def spreadsheet = 
+				spreadService.convertSpreadsheetFromDoc(docSpreadsheet)
+				
+        	def (worksheet, res2) = spreadsheet.addWorksheet(worksheetName)
+        			
+        	assertTrue(res2 == GApiStatus.OK)		
+        	assertNotNull(worksheet)
+        	assertEquals(worksheet.getTitle().getPlainText(), worksheetName)
+        }
+    }
 	
     void tearDown() {
     }
