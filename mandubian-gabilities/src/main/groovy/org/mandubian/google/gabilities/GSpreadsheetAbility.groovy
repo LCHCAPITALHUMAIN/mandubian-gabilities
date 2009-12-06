@@ -648,10 +648,14 @@ public class GSpreadsheetAbility{
 			final SpreadsheetService self, 
 			final com.google.gdata.data.docs.DocumentListEntry spreadsheet)
 				throws 	MalformedURLException, IOException, ServiceException {	
-		def key = spreadsheet.getKey()
-		def realKey = key.substring("spreadsheet%3A".length())
+		//def key = spreadsheet.getKey()
+		//def realKey = key.substring("spreadsheet%3A".length())
+		def resid = spreadsheet.getResourceId()
+		def key = resid.substring("spreadsheet:".length())
+		println("resid:${resid}")
+		println("key:${GApiConstants.feedBaseUrlSpreadsheet}/${key}")
 		return self.getEntry(
-					new URL("${GApiConstants.feedBaseUrlSpreadsheet}/${realKey}"), 
+					new URL("${GApiConstants.feedBaseUrlSpreadsheet}/${key}"), 
 					SpreadsheetEntry.class)		
 	}
 
