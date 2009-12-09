@@ -74,21 +74,33 @@ class GDocSpreadsheetAbilitySingleTest extends GroovyTestCase {
     }	
 */	
 	void testAddWorksheet() {
-        use(GSpreadsheetAbility) {
-        	def(docSpreadsheet, res) = 
-    			docService.createSpreadsheet(docName, new File(csvfilepath))
-    			
+        use(GDocAbility, GSpreadsheetAbility) {
+        	def (spreadsheet0, res00) = spreadService.getSpreadsheet("BlogWrapper-mandubian-test1")
+        	printf("res00:"+res00)
+        	
+        	def(doc0,res0) = docService.getDocument("BlogWrapper-mandubian-test1")
+        	printf("RES:"+res0)
+        	/*def(docSpreadsheet, res) = 
+    			docService.createSpreadsheet("BlogWrapper-mandubian-test1", new File(csvfilepath))
+    		if(res==GApiStatus.ALREADY_EXISTS)
+    		{
+    			println("ALREADY_EXISTS")
+    		}
+        	
     		println("waitForDocumentCreation:"
         			+docService.waitForSpreadsheetCreation(docName))
-        	
+        	*/
     		def spreadsheet = 
-				spreadService.convertSpreadsheetFromDoc(docSpreadsheet)
-				
-        	def (worksheet, res2) = spreadsheet.addWorksheet(worksheetName)
+				spreadService.convertSpreadsheetFromDoc(doc0)
+			def (worksheet, res2) = spreadsheet.getWorksheet("Sheet 1")
+			println("res2:"+res2)
+			def res3 = worksheet.appendCol("test")
+			println("res3:"+res3)
+        	/*def (worksheet, res2) = spreadsheet.addWorksheet(worksheetName)
         			
         	assertTrue(res2 == GApiStatus.OK)		
         	assertNotNull(worksheet)
-        	assertEquals(worksheet.getTitle().getPlainText(), worksheetName)
+        	assertEquals(worksheet.getTitle().getPlainText(), worksheetName)*/
         }
     }
 	
