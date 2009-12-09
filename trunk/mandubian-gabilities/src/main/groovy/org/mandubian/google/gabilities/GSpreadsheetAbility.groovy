@@ -28,6 +28,8 @@
 package org.mandubian.google.gabilities
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import groovy.time.BaseDuration
 import org.codehaus.groovy.runtime.TimeCategory
@@ -1230,4 +1232,522 @@ public class GSpreadsheetAbility{
 		default: return [ GApiStatus.BAD_STATE, 0 ]
 		}		
 	}	
+
+	/**
+	 * changes worksheet metadata title.
+	 * <i>Take into account the result is a tuple (WorksheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * For example:<br/>
+	 * <code>
+	 * def res = worksheet.changeTitle("new-title")<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param title				the new title of the worksheet.
+	 * @param options			Specifies function options as a map.<br/>
+	 * 							No Options accepted yet. Here for further use and homogeneity
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(WorksheetEntry, GApiStatus.OK)</li>
+	 * 							</ul>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static changeTitle(
+			final WorksheetEntry self,  final String title) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		self.setTitle(new PlainTextConstruct(title))
+		return [ self.update(), GApiStatus.OK ]		
+	}
+
+	/**
+	 * changes worksheet metadata row count.
+	 * <i>Take into account the result is a tuple (WorksheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * <i>Take into account that if the new rowcount is less than the previous,
+	 * you may loose some data so by default, this case will return a DATA_LOSS_RISK
+	 * error but you can use the options["force"] to force the change.</i><br/> 
+	 * For example:<br/>
+	 * <code>
+	 * def res = worksheet.changeRowCount(125)<br/>
+	 * def res = worksheet.changeRowCount(125, [ "force": true ])<br/>
+	 * 
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param rows				the new number of rows.
+	 * @param options			Specifies function options as a map.<br/>
+	 * 							For example:<br/>
+	 * 							[ "force": true ]
+	 * 							Accepted options are :<br/>
+	 * 							<table>
+	 * 								<tr><th>option</th><th>description</th><th>type</th><th>default value</th>
+	 * 								<tr><th>force</th><td>forces or not the change of row count even if it implies losing data</td><td>boolean</td><td>false</td></tr>
+	 * 							</table>
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(WorksheetEntry, GApiStatus.OK)</li>
+	 * 								<li>(WorksheetEntry, GApiStatus.DATA_LOSS_RISK)</li>
+	 * 							</ul>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static changeRowCount(
+			final WorksheetEntry self,  
+			final options = [:],			
+			final int rows) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		def force = options["force"]?options["force"]:false
+		if(rows < self.getRowCount()&&!options["force"]) 
+			return [ self, GApiStatus.DATA_LOSS_RISK ]
+
+		self.setRowCount(rows)
+		return [ self.update(), GApiStatus.OK ]
+	}
+
+	/**
+	 * changes worksheet metadata col count.
+	 * <i>Take into account the result is a tuple (WorksheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * <i>Take into account that if the new colcount is less than the previous,
+	 * you may loose some data so by default, this case will return a DATA_LOSS_RISK
+	 * error but you can use the options["force"] to force the change.</i><br/> 
+	 * For example:<br/>
+	 * <code>
+	 * def res = worksheet.changeColCount(125)<br/>
+	 * def res = worksheet.changeColCount(125, [ "force": true ])<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param cols				the new number of columns.
+	 * @param options			Specifies function options as a map.<br/>
+	 * 							For example:<br/>
+	 * 							[ "force": true ]
+	 * 							Accepted options are :<br/>
+	 * 							<table>
+	 * 								<tr><th>option</th><th>description</th><th>type</th><th>default value</th>
+	 * 								<tr><th>force</th><td>forces or not the change of row count even if it implies losing data</td><td>boolean</td><td>false</td></tr>
+	 * 							</table>
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(WorksheetEntry, GApiStatus.OK)</li>
+	 * 								<li>(WorksheetEntry, GApiStatus.DATA_LOSS_RISK)</li>
+	 * 							</ul>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static changeColCount(
+			final WorksheetEntry self,  
+			final options = [:],			
+			final int cols) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		def force = options["force"]?options["force"]:false
+		if(cols < self.getColCount()&&!options["force"]) 
+			return [ self, GApiStatus.DATA_LOSS_RISK ]
+
+		self.setColCount(cols)
+		return [ self.update(), GApiStatus.OK ]
+	}
+
+	/**
+	 * changes worksheet metadata row/col counts.
+	 * <i>Take into account the result is a tuple (WorksheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * <i>Take into account that if the new row/colcount is less than the previous,
+	 * you may loose some data so by default, this case will return a DATA_LOSS_RISK
+	 * error but you can use the options["force"] to force the change.</i><br/> 
+	 * For example:<br/>
+	 * <code>
+	 * def res = worksheet.changeRowColCount(125, 24)<br/>
+	 * def res = worksheet.changeRowColCount(125, 26, [ "force": true ])<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param rows				the new number of rows. 
+	 * @param cols				the new number of columns.
+	 * @param options			Specifies function options as a map.<br/>
+	 * 							For example:<br/>
+	 * 							[ "force": true ]
+	 * 							Accepted options are :<br/>
+	 * 							<table>
+	 * 								<tr><th>option</th><th>description</th><th>type</th><th>default value</th>
+	 * 								<tr><th>force</th><td>forces or not the change of row count even if it implies losing data</td><td>boolean</td><td>false</td></tr>
+	 * 							</table>
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(WorksheetEntry, GApiStatus.OK)</li>
+	 * 								<li>(WorksheetEntry, GApiStatus.DATA_LOSS_RISK)</li>
+	 * 							</ul>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static changeRowColCount(
+			final WorksheetEntry self,  
+			final options = [:],		
+			final int rows, final int cols) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		def force = options["force"]?options["force"]:false
+        if(rows < self.getRowCount()&&!options["force"]) 
+ 			return [ self, GApiStatus.DATA_LOSS_RISK ]
+		if(cols < self.getColCount()&&!options["force"]) 
+			return [ self, GApiStatus.DATA_LOSS_RISK ]
+        
+ 		self.setRowCount(rows)
+		self.setColCount(cols)
+		return [ self.update(), GApiStatus.OK ]
+	}
+
+	/**
+	 * changes worksheet metadata title/rowcount/colcount.
+	 * <i>Take into account the result is a tuple (WorksheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * <i>Take into account that if the new row/colcount is less than the previous,
+	 * you may loose some data so by default, this case will return a DATA_LOSS_RISK
+	 * error but you can use the options["force"] to force the change.</i><br/> 
+	 * For example:<br/>
+	 * <code>
+	 * def res = worksheet.changeMetadata("newtitle", 125, 24)<br/>
+	 * def res = worksheet.changeMetadata("newtitle", 125, 26, [ "force": true ])<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param title				the new title. 
+	 * @param rows				the new number of rows. 
+	 * @param cols				the new number of columns.
+	 * @param options			Specifies function options as a map.<br/>
+	 * 							For example:<br/>
+	 * 							[ "force": true ]
+	 * 							Accepted options are :<br/>
+	 * 							<table>
+	 * 								<tr><th>option</th><th>description</th><th>type</th><th>default value</th>
+	 * 								<tr><th>force</th><td>forces or not the change of row count even if it implies losing data</td><td>boolean</td><td>false</td></tr>
+	 * 							</table>
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(WorksheetEntry, GApiStatus.OK)</li>
+	 * 								<li>(WorksheetEntry, GApiStatus.DATA_LOSS_RISK)</li>
+	 * 							</ul>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static changeMetadata(
+			final WorksheetEntry self,  
+			final options = [:],		
+			final title, final int rows, final int cols) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		def force = options["force"]?options["force"]:false
+		if(rows < self.getRowCount()&&!options["force"]) 
+ 			return [ self, GApiStatus.DATA_LOSS_RISK ]
+		if(cols < self.getColCount()&&!options["force"]) 
+			return [ self, GApiStatus.DATA_LOSS_RISK ]
+        
+		self.setTitle(new PlainTextConstruct(title))
+		self.setRowCount(rows)
+		self.setColCount(cols)
+		
+		return [ self.update(), GApiStatus.OK ]
+	}
+
+
+
+	
+	/**
+	 * queries rows in a worksheet with a structured query.
+	 * <i>Take into account the result is a tuple (SpreadsheetEntry, GApiStatus) 
+	 * and not a single variable.</i><br/>
+	 * <code>
+	 * def (entry, res) = worksheet.queryRows("name=XXX and age>25")<br/>
+	 * def (entry) = worksheet.queryRows("name=XXX and age>25")<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param qyeryStr			the query string. 
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>(null, GApiStatus.NOT_FOUND)</li>
+	 * 								<li>(ListEntry, GApiStatus.SINGLE_FOUND)</li>
+	 * 								<li>(List<ListEntry>, GApiStatus.MULTIPLE_FOUND)</li>
+	 * 							</ul>	 
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static queryRows(
+			final WorksheetEntry self,  final String queryStr) 
+				throws 	MalformedURLException, IOException, ServiceException
+	{
+		ListQuery query = new ListQuery(self.getListFeedUrl())
+		query.setSpreadsheetQuery(queryStr)
+		ListFeed feed = self.getService().query(query, ListFeed.class)
+
+		switch(feed.getEntries()?.size()){
+		case 0: return [ null, GApiStatus.NOT_FOUND ]
+		case 1: return [ feed.getEntries().get(0), GApiStatus.SINGLE_FOUND ]
+        default: return [ feed.getEntries(), GApiStatus.MULTIPLE_FOUND ]
+		}
+	}
+
+		
+	/**
+	 * deletes rows in a worksheet with a structured query.
+	 * <code>
+	 * def (entry, res) = worksheet.queryRows("name=XXX and age>25")<br/>
+	 * def (entry) = worksheet.queryRows("name=XXX and age>25")<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param qyeryStr			the query string. 
+	 * @return					a tuple among: 
+	 * 							<ul>
+	 * 								<li>GApiStatus.NOT_FOUND)</li>
+	 * 								<li>GApiStatus.SINGLE_DELETED)</li>
+	 * 								<li>GApiStatus.MULTIPLE_DELETED)</li>
+	 * 							</ul>	 
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static deleteRows(
+			final WorksheetEntry self,  final String queryStr) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		def (rows, res) = self.queryRows(queryStr)
+		
+		switch(res){
+		case GApiStatus.NOT_FOUND: return GApiStatus.NOT_FOUND
+		case GApiStatus.SINGLE_FOUND:
+			rows.delete()
+			return GApiStatus.SINGLE_DELETED
+		case GApiStatus.MULTIPLE_FOUND:
+			rows.each{ it.delete() }
+			return GApiStatus.MULTIPLE_DELETED
+		}
+	}
+
+	/**
+	 * appends a row in a worksheet after the last row filling columns with 
+	 * values from a map.
+	 * <code>
+	 * def res = worksheet.appendRow([ "col1":"value1", "col2":"value2"...)<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param map				the map containing values for columns. 
+	 * @return					new ListEntry
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static ListEntry appendRow(
+			final WorksheetEntry self,  final Map map) 
+				throws 	MalformedURLException, IOException, ServiceException {
+		ListEntry newEntry = new ListEntry();
+		
+		map.each { key, value -> 
+			newEntry.getCustomElements().setValueLocal(key, "${value}")
+		}
+		
+		return self.getService().insert(self.getListFeedUrl(), newEntry);
+	}
+	
+	/**
+	 * update a row (ListEntry)filling columns with values from a map.
+	 * <code>
+	 * def listEntry = listEntry.update([ "col1":"value1", "col2":"value2"...)<br/>
+	 * </code>
+	 * @param self				the ListEntry externally initialized.
+	 * @param map				the map containing values for columns. 
+	 * @return					updated ListEntry
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static ListEntry update(
+			final ListEntry self,  final Map map) 
+				throws 	MalformedURLException, IOException, ServiceException {	
+		map.each { key, value -> 
+			self.getCustomElements().setValueLocal(key, "${value}")
+		}
+		
+		return self.update();
+	}
+
+	
+	/**
+	 * gets a cell in a worksheet from its row and col numbers.
+	 * <code>
+	 * def cellEntry = worksheet.update([ "col1":"value1", "col2":"value2"...)<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param row				the row of the cell. 
+	 * @param col				the col of the cell. 
+	 * @return					updated CellEntry
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static CellEntry getCell(
+			final WorksheetEntry self,  final int row, final int col) 
+				throws 	MalformedURLException, IOException, ServiceException {	
+		return self.getService().getEntry(
+				new URL(self.getCellFeedUrl().toExternalForm()+"/R"+row+"C"+col), 
+				CellEntry.class)		
+	}
+
+	/**
+	 * updates a cell content in a worksheet from its row and col numbers.
+	 * <code>
+	 * def cellEntry = worksheet.updateCell(row, col, "content")<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param row				the row of the cell. 
+	 * @param col				the col of the cell. 
+	 * @param content			the new content of the cell.  
+	 * @return					updated CellEntry
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static CellEntry updateCell(
+			final WorksheetEntry self,  final int row, final int col, 
+			final String content) 
+				throws 	MalformedURLException, IOException, ServiceException {	
+		CellEntry cell = self.getCell(row, col)
+
+		cell?.changeInputValueLocal(content)
+		return cell?.update()
+	}
+	
+	/**
+	 * updates a cellentry content in a worksheet.
+	 * <code>
+	 * def cellEntry = cellEntry.update("content")<br/>
+	 * </code>
+	 * @param self				the CellEntry externally initialized.
+	 * @param content			the new content of the cell.  
+	 * @return					updated CellEntry
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static CellEntry update(
+			final CellEntry self,  final String content) 
+				throws 	MalformedURLException, IOException, ServiceException
+	{	
+		self.changeInputValueLocal(content)
+		return self.update()
+	}
+	
+	/**
+	 * gets cells in a square [min-row, max-row, min-col, max-col].
+	 * If min-row or min-col is not provided, it means there is no minimum 
+	 * (from first row or column)
+	 * If max-row or max-col is not provided, it means there is no maximum 
+	 * (up to last row or column)
+	 * <code>
+	 * def cellEntries = worksheetEntry.getCells([ "min-row":2, "max-row":25, "min-col":3, "max-col":38 ])<br/>
+	 * def cellEntries = worksheetEntry.getCells([ "min-row":2, "min-col":3,  ])<br/>
+	 * def cellEntries = worksheetEntry.getCells([ "max-row":25, "min-col":3, "max-col":38 ])<br/>
+	 * def cellEntries = worksheetEntry.getCells([ "min-row":2, "max-row":25, "min-col":3])<br/>
+	 * </code>
+	 * @param self				the WorksheetEntry externally initialized.
+	 * @param limits			a map containing defining the limits of the square ("min-row", "max-row", "min-col", "max-col")  
+	 * @return					List<CellEntry>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static List<CellEntry> getCells(
+			final WorksheetEntry self,  
+			final limits = []) 
+				throws 	MalformedURLException, IOException, ServiceException {	
+		CellQuery query = new CellQuery(self.getCellFeedUrl());
+		query.setMinimumRow(limits["min-row"]);
+		query.setMaximumRow(limits["max-row"]);
+		query.setMinimumCol(limits["min-col"]);
+		query.setMaximumCol(limits["max-col"]);
+		return self.getService().query(query, CellFeed.class)?.getEntries();
+	}
+
+	/**
+	 * gets the cells in the header row being the first row used by GSpreadsheet 
+	 * to define columns.
+	 * <code>
+	 * def cellEntries = worksheetEntry.getHeaderRow()<br/>
+	 * </code>
+	 * @param self		the WorksheetEntry externally initialized.
+	 * @return			List<CellEntry>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static List<CellEntry> getHeaderRow(	final WorksheetEntry self) 
+				throws 	MalformedURLException, IOException, ServiceException
+	{	
+		return self.getCells([ "max-row": 1 ])
+	}
+
+	/**
+	 * appends a column to a worksheet after the last column
+	 * <code>
+	 * def cellEntries = worksheetEntry.appendCol("newcol")<br/>
+	 * </code>
+	 * @param self		the WorksheetEntry externally initialized.
+	 * @param colName	the new column name.
+	 * @return			List<CellEntry>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static appendCol(final WorksheetEntry self,  final String colName) 
+				throws 	MalformedURLException, IOException, ServiceException 
+	{	
+		List<CellEntry> cells = self.getHeaderRow()
+		
+		if(cells.find { it.getPlainTextContent() == colName }) 
+				return GApiStatus.ALREADY_EXISTS
+		
+		def newCol = self.updateCell(1, cells.size()+1, colName)
+		return GApiStatus.OK
+	}	
+
+	/**
+	 * gets the cells in a worksheet column
+	 * <code>
+	 * def cellEntries = worksheetEntry.getColCells("newcol")<br/>
+	 * </code>
+	 * @param self		the WorksheetEntry externally initialized.
+	 * @param colName	the column name.
+	 * @return			List<CellEntry>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static List<CellEntry> getColCells(
+			final WorksheetEntry self,  final String colName) 
+				throws 	MalformedURLException, IOException, ServiceException
+	{	
+		List<CellEntry> cells = self.getHeaderRow()
+		def idx=cells.findIndexOf { it.getPlainTextContent() == colName }
+		if(idx>-1)
+			return self.getCells([ "min-col" : idx+1, "max-col" : idx+1, "min-row": 2 ])
+		else return null
+	}	
+
+	
+	/**
+	 * gets the cells in a worksheet row
+	 * <code>
+	 * def cellEntries = worksheetEntry.getRowCells(5)<br/>
+	 * </code>
+	 * @param self		the WorksheetEntry externally initialized.
+	 * @param row		the row index.
+	 * @return			List<CellEntry>
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static List<CellEntry> getRowCells(
+			final WorksheetEntry self,  final int row) 
+				throws 	MalformedURLException, IOException, ServiceException
+	{	
+		return self.getCells([ "min-row": row, "max-row": row])
+	}		
+	
 }
